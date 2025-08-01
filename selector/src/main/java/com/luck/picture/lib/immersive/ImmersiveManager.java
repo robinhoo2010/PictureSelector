@@ -37,6 +37,7 @@ public class ImmersiveManager {
 
 
     /**
+     *  大于 api23沉浸式处理，Android15 不再支持需要
      * @param baseActivity
      * @param statusBarColor     状态栏的颜色
      * @param navigationBarColor 导航栏的颜色
@@ -44,8 +45,12 @@ public class ImmersiveManager {
     public static void immersiveAboveAPI23(AppCompatActivity baseActivity, boolean isMarginStatusBar
             , boolean isMarginNavigationBar, int statusBarColor, int navigationBarColor, boolean isDarkStatusBarIcon) {
         try {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                // Android 15开始不再推荐使用
+                return;
+            }
             Window window = baseActivity.getWindow();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 //4.4版本及以上 5.0版本及以下
                 if (isDarkStatusBarIcon) {
                     initBarBelowLOLLIPOP(baseActivity);
