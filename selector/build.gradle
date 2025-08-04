@@ -1,4 +1,7 @@
 apply plugin: 'com.android.library'
+anpply plugins {
+    id 'maven-publish'
+}
 
 android {
     compileSdk 34
@@ -40,4 +43,17 @@ dependencies {
     implementation "androidx.exifinterface:exifinterface:${cfgs.exifinterface_version}"
     implementation "androidx.viewpager2:viewpager2:${cfgs.viewpage2}"
     implementation "androidx.constraintlayout:constraintlayout:${cfgs.constraintlayout}"
+}
+
+group = 'com.github.robinhoo2010'   // 随意，但最好一致
+version = '3.11.6'                     // 与 GitHub Tag 保持一致
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release   // Android 项目用 release
+            }
+        }
+    }
 }
