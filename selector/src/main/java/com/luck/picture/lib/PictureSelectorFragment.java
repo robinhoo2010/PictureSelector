@@ -258,7 +258,7 @@ public class PictureSelectorFragment extends PictureCommonFragment
         }
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             EdgeToEdgeInsetFixer.applyInsets(bottomNarBar, EdgeToEdgeInsetFixer.Edge.BOTTOM);
-            EdgeToEdgeInsetFixer.applyInsets(completeSelectView, EdgeToEdgeInsetFixer.Edge.BOTTOM);
+//            EdgeToEdgeInsetFixer.applyInsets(completeSelectView, EdgeToEdgeInsetFixer.Edge.BOTTOM);
         }, 300);
     }
 
