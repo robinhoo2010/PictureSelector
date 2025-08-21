@@ -11,6 +11,12 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.OnApplyWindowInsetsListener;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.yalantis.ucrop.util.DensityUtil;
 
@@ -42,15 +48,43 @@ public class ImmersiveManager {
      * @param statusBarColor     状态栏的颜色
      * @param navigationBarColor 导航栏的颜色
      */
-    public static void immersiveAboveAPI23(AppCompatActivity baseActivity, boolean isMarginStatusBar
-            , boolean isMarginNavigationBar, int statusBarColor, int navigationBarColor, boolean isDarkStatusBarIcon) {
+    public static void immersiveAboveAPI23(AppCompatActivity baseActivity,
+                                           final boolean isMarginStatusBar,
+                                           final boolean isMarginNavigationBar,
+                                           int statusBarColor,
+                                           int navigationBarColor,
+                                           boolean isDarkStatusBarIcon) {
         try {
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                // Android 15开始不再推荐使用
-                return;
-            }
             Window window = baseActivity.getWindow();
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            // Android 15 及以上，使用 WindowInsets API
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                // 开启全屏内容绘制
+                WindowCompat.setDecorFitsSystemWindows(window, false);
+
+                WindowInsetsControllerCompat controller =
+                        WindowCompat.getInsetsController(window, window.getDecorView());
+
+                // 状态栏/导航栏图标颜色
+                controller.setAppearanceLightStatusBars(isDarkStatusBarIcon);
+                controller.setAppearanceLightNavigationBars(isDarkStatusBarIcon);
+
+                // 状态栏/导航栏背景色
+                window.setStatusBarColor(statusBarColor);
+                window.setNavigationBarColor(navigationBarColor);
+
+                // 根据 isMarginStatusBar / isMarginNavigationBar 决定是否加 padding
+                View decorView = window.getDecorView();
+                ViewCompat.setOnApplyWindowInsetsListener(decorView, new OnApplyWindowInsetsListener() {
+                    @Override
+                    public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat insets) {
+                        Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                        int paddingTop = isMarginStatusBar ? systemBars.top : 0;
+                        int paddingBottom = isMarginNavigationBar ? systemBars.bottom : 0;
+                        v.setPadding(0, paddingTop, 0, paddingBottom);
+                        return WindowInsetsCompat.CONSUMED;
+                    }
+                });
+            } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 //4.4版本及以上 5.0版本及以下
                 if (isDarkStatusBarIcon) {
                     initBarBelowLOLLIPOP(baseActivity);
