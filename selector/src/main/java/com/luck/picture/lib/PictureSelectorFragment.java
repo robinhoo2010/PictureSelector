@@ -3,6 +3,8 @@ package com.luck.picture.lib;
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.os.Vibrator;
 import android.text.TextUtils;
@@ -60,6 +62,7 @@ import com.luck.picture.lib.utils.AnimUtils;
 import com.luck.picture.lib.utils.DateUtils;
 import com.luck.picture.lib.utils.DensityUtil;
 import com.luck.picture.lib.utils.DoubleUtils;
+import com.luck.picture.lib.utils.EdgeToEdgeInsetFixer;
 import com.luck.picture.lib.utils.StyleUtils;
 import com.luck.picture.lib.utils.ToastUtils;
 import com.luck.picture.lib.utils.ValueOf;
@@ -253,6 +256,10 @@ public class PictureSelectorFragment extends PictureCommonFragment
         } else {
             requestLoadData();
         }
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            EdgeToEdgeInsetFixer.applyInsets(bottomNarBar, EdgeToEdgeInsetFixer.Edge.BOTTOM);
+//            EdgeToEdgeInsetFixer.applyInsets(completeSelectView, EdgeToEdgeInsetFixer.Edge.BOTTOM);
+        }, 300);
     }
 
 

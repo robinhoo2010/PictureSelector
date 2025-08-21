@@ -12,6 +12,8 @@ import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Vibrator;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -70,6 +72,7 @@ import com.luck.picture.lib.style.SelectMainStyle;
 import com.luck.picture.lib.utils.ActivityCompatHelper;
 import com.luck.picture.lib.utils.DensityUtil;
 import com.luck.picture.lib.utils.DownloadFileUtils;
+import com.luck.picture.lib.utils.EdgeToEdgeInsetFixer;
 import com.luck.picture.lib.utils.MediaUtils;
 import com.luck.picture.lib.utils.SdkVersionUtils;
 import com.luck.picture.lib.utils.StyleUtils;
@@ -272,6 +275,10 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
             initComplete();
         }
         iniMagicalView();
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            EdgeToEdgeInsetFixer.applyInsets(bottomNarBar, EdgeToEdgeInsetFixer.Edge.BOTTOM);
+//            EdgeToEdgeInsetFixer.applyInsets(completeSelectView, EdgeToEdgeInsetFixer.Edge.BOTTOM);
+        }, 300);
     }
 
     /**
