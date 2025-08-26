@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -1023,12 +1024,15 @@ public abstract class PictureCommonFragment extends Fragment implements IPicture
      */
     @Override
     public void onPermissionExplainEvent(boolean isDisplayExplain, String[] permissionArray) {
+        Log.i(TAG, "onPermissionExplainEvent isDisplayExplain：" + isDisplayExplain + ",permissionArray:" + permissionArray);
+        Log.i(TAG, "onPermissionExplainEvent onPermissionDescriptionListener：" + selectorConfig.onPermissionDescriptionListener);
         if (selectorConfig.onPermissionDescriptionListener != null) {
             if (PermissionChecker.isCheckSelfPermission(getAppContext(), permissionArray)) {
                 selectorConfig.onPermissionDescriptionListener.onDismiss(this);
             } else {
                 if (isDisplayExplain) {
                     int permissionStatus = PermissionUtil.getPermissionStatus(requireActivity(), permissionArray[0]);
+                    Log.i(TAG, "onPermissionExplainEvent permissionStatus：" + permissionStatus);
                     if (permissionStatus != PermissionUtil.REFUSE_PERMANENT) {
                         selectorConfig.onPermissionDescriptionListener.onPermissionDescription(this, permissionArray);
                     }
