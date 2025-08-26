@@ -1024,16 +1024,16 @@ public abstract class PictureCommonFragment extends Fragment implements IPicture
      */
     @Override
     public void onPermissionExplainEvent(boolean isDisplayExplain, String[] permissionArray) {
-        Log.i(TAG, "onPermissionExplainEvent isDisplayExplain：" + isDisplayExplain + ",permissionArray:" + permissionArray);
-        Log.i(TAG, "onPermissionExplainEvent onPermissionDescriptionListener：" + selectorConfig.onPermissionDescriptionListener);
+        Log.d(TAG, "onPermissionExplainEvent isDisplayExplain：" + isDisplayExplain + ",permissionArray:" + permissionArray);
+        Log.d(TAG, "onPermissionExplainEvent onPermissionDescriptionListener：" + selectorConfig.onPermissionDescriptionListener);
         if (selectorConfig.onPermissionDescriptionListener != null) {
             if (PermissionChecker.isCheckSelfPermission(getAppContext(), permissionArray)) {
                 selectorConfig.onPermissionDescriptionListener.onDismiss(this);
             } else {
                 if (isDisplayExplain) {
                     int permissionStatus = PermissionUtil.getPermissionStatus(requireActivity(), permissionArray[0]);
-                    Log.i(TAG, "onPermissionExplainEvent permissionStatus：" + permissionStatus);
-                    if (permissionStatus != PermissionUtil.REFUSE_PERMANENT) {
+                    Log.d(TAG, "onPermissionExplainEvent permissionStatus：" + permissionStatus);
+                    if (permissionStatus != PermissionUtil.SUCCESS) {
                         selectorConfig.onPermissionDescriptionListener.onPermissionDescription(this, permissionArray);
                     }
                 } else {
