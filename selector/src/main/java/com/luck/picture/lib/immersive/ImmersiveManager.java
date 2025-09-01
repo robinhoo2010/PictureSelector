@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowInsetsController;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
@@ -68,6 +69,19 @@ public class ImmersiveManager {
                 window.setStatusBarColor(statusBarColor);
                 window.setNavigationBarColor(navigationBarColor);
 
+                // Android 11+ 推荐方式：InsetsController 控制图标颜色
+                WindowInsetsController insetsController = window.getInsetsController();
+                if (insetsController != null) {
+                    insetsController.setSystemBarsAppearance(
+                            isDarkStatusBarIcon ? WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS : 0,
+                            WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+                    );
+                    insetsController.setSystemBarsAppearance(
+                            isDarkStatusBarIcon ? WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS : 0,
+                            WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
+                    );
+                }
+
                 // 根据 isMarginStatusBar / isMarginNavigationBar 决定是否加 padding
                 View decorView = window.getDecorView();
                 ViewCompat.setOnApplyWindowInsetsListener(decorView, new OnApplyWindowInsetsListener() {
@@ -75,7 +89,8 @@ public class ImmersiveManager {
                     public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat insets) {
                         Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
                         int paddingTop = isMarginStatusBar ? systemBars.top : 0;
-                        int paddingBottom = isMarginNavigationBar ? systemBars.bottom : 0;
+//                        int paddingBottom = isMarginNavigationBar ? systemBars.bottom : 0;
+                        int paddingBottom = systemBars.bottom;
                         v.setPadding(0, paddingTop, 0, paddingBottom);
                         return WindowInsetsCompat.CONSUMED;
                     }
