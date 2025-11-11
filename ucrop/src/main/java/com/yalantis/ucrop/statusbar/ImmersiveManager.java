@@ -68,10 +68,6 @@ public class ImmersiveManager {
                 controller.setAppearanceLightStatusBars(isDarkStatusBarIcon);
                 controller.setAppearanceLightNavigationBars(isDarkStatusBarIcon);
 
-                // 状态栏/导航栏背景色
-                window.setStatusBarColor(statusBarColor);
-                window.setNavigationBarColor(navigationBarColor);
-
                 // 根据 isMarginStatusBar / isMarginNavigationBar 决定是否加 padding
                 View decorView = window.getDecorView();
                 ViewCompat.setOnApplyWindowInsetsListener(decorView, new OnApplyWindowInsetsListener() {

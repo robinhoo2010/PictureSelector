@@ -65,10 +65,6 @@ public class ImmersiveManager {
                 controller.setAppearanceLightStatusBars(isDarkStatusBarIcon);
                 controller.setAppearanceLightNavigationBars(isDarkStatusBarIcon);
 
-                // 状态栏/导航栏背景色
-                window.setStatusBarColor(statusBarColor);
-                window.setNavigationBarColor(navigationBarColor);
-
                 // Android 11+ 推荐方式：InsetsController 控制图标颜色
                 WindowInsetsController insetsController = window.getInsetsController();
                 if (insetsController != null) {

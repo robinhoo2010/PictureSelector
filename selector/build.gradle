@@ -2,11 +2,11 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
 android {
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         minSdk 19
-        targetSdk 34
+        targetSdk 35
 
         vectorDrawables.useSupportLibrary = true
     }
@@ -44,7 +44,7 @@ dependencies {
 }
 
 group = 'com.github.robinhoo2010'   // 随意，但最好一致
-version = '3.11.6'                     // 与 GitHub Tag 保持一致
+version = '3.11.10'                     // 与 GitHub Tag 保持一致
 
 afterEvaluate {
     publishing {
