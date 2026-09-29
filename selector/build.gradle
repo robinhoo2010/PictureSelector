@@ -2,13 +2,18 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
 android {
-    compileSdk 34
+    namespace 'com.luck.picture.lib'
+    compileSdk 36
 
     defaultConfig {
         minSdk 19
-        targetSdk 34
+        targetSdk 36
 
         vectorDrawables.useSupportLibrary = true
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 
     compileOptions {
@@ -22,7 +27,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    lintOptions {
+    publishing {
+        singleVariant('release')
+    }
+    lint {
         abortOnError false
     }
 }
@@ -44,7 +52,7 @@ dependencies {
 }
 
 group = 'com.github.robinhoo2010'   // 随意，但最好一致
-version = '3.11.10'                     // 与 GitHub Tag 保持一致
+version = '3.11.11'                     // 与 GitHub Tag 保持一致
 
 afterEvaluate {
     publishing {

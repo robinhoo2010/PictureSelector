@@ -68,15 +68,14 @@ public class ImmersiveManager {
                 controller.setAppearanceLightStatusBars(isDarkStatusBarIcon);
                 controller.setAppearanceLightNavigationBars(isDarkStatusBarIcon);
 
-                // 根据 isMarginStatusBar / isMarginNavigationBar 决定是否加 padding
+                // Android 15+ 强制边到边：在 decor 上留出系统栏区域，
+                // 与旧版本（decorFits=true + setStatusBarColor）的内容布局保持一致
                 View decorView = window.getDecorView();
                 ViewCompat.setOnApplyWindowInsetsListener(decorView, new OnApplyWindowInsetsListener() {
                     @Override
                     public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat insets) {
                         Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-                        int paddingTop = isMarginStatusBar ? systemBars.top : 0;
-                        int paddingBottom = isMarginNavigationBar ? systemBars.bottom : 0;
-                        v.setPadding(0, paddingTop, 0, paddingBottom);
+                        v.setPadding(0, systemBars.top, 0, systemBars.bottom);
                         return WindowInsetsCompat.CONSUMED;
                     }
                 });
@@ -130,8 +129,8 @@ public class ImmersiveManager {
                     return;
                 }
 
-                window.setStatusBarColor(statusBarColor);
-                window.setNavigationBarColor(navigationBarColor);
+                BarCompat.setStatusBarColor(window, statusBarColor);
+                BarCompat.setNavigationBarColor(window, navigationBarColor);
 
             }
         } catch (Exception e) {

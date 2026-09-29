@@ -6,12 +6,16 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
 public class SimpleActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Android 15+ 边到边模式下需显式声明浅色背景配深色系统栏图标
+        WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView())
+                .setAppearanceLightStatusBars(true);
         setContentView(R.layout.activity_other);
         Button btn_activity = findViewById(R.id.btn_activity);
         Button btn_inject_fragment = findViewById(R.id.btn_inject_fragment);

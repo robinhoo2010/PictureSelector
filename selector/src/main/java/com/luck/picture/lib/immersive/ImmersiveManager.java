@@ -78,16 +78,14 @@ public class ImmersiveManager {
                     );
                 }
 
-                // 根据 isMarginStatusBar / isMarginNavigationBar 决定是否加 padding
+                // Android 15+ 强制边到边：在 decor 上留出系统栏区域，
+                // 与旧版本（decorFits=true + setStatusBarColor）的内容布局保持一致
                 View decorView = window.getDecorView();
                 ViewCompat.setOnApplyWindowInsetsListener(decorView, new OnApplyWindowInsetsListener() {
                     @Override
                     public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat insets) {
                         Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-                        int paddingTop = isMarginStatusBar ? systemBars.top : 0;
-//                        int paddingBottom = isMarginNavigationBar ? systemBars.bottom : 0;
-                        int paddingBottom = systemBars.bottom;
-                        v.setPadding(0, paddingTop, 0, paddingBottom);
+                        v.setPadding(0, systemBars.top, 0, systemBars.bottom);
                         return WindowInsetsCompat.CONSUMED;
                     }
                 });
@@ -140,8 +138,8 @@ public class ImmersiveManager {
                     //留出来状态栏 不留出来导航栏 没找到办法。。
                     return;
                 }
-                window.setStatusBarColor(statusBarColor);
-                window.setNavigationBarColor(navigationBarColor);
+                BarCompat.setStatusBarColor(window, statusBarColor);
+                BarCompat.setNavigationBarColor(window, navigationBarColor);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -161,6 +159,21 @@ public class ImmersiveManager {
      */
     public static void translucentStatusBar(Activity activity, boolean isDarkStatusBarBlack) {
         Window window = activity.getWindow();
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            // Android 15+：强制边到边，系统栏本身已透明，只需控制图标深浅
+            WindowCompat.setDecorFitsSystemWindows(window, false);
+            WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(window, window.getDecorView());
+            controller.setAppearanceLightStatusBars(isDarkStatusBarBlack);
+            // 全屏模式内容需延伸到系统栏下，覆盖 immersiveAboveAPI23 在 decor 上设置的 padding
+            ViewCompat.setOnApplyWindowInsetsListener(window.getDecorView(), new OnApplyWindowInsetsListener() {
+                @Override
+                public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat insets) {
+                    v.setPadding(0, 0, 0, 0);
+                    return WindowInsetsCompat.CONSUMED;
+                }
+            });
+            return;
+        }
         //添加Flag把状态栏设为可绘制模式
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -169,7 +182,7 @@ public class ImmersiveManager {
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         //设置状态栏为透明
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.setStatusBarColor(Color.TRANSPARENT);
+            BarCompat.setStatusBarColor(window, Color.TRANSPARENT);
         }
         View decor = window.getDecorView();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

@@ -36,6 +36,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
@@ -62,6 +65,7 @@ import com.luck.picture.lib.interfaces.OnQueryDataResultListener;
 import com.luck.picture.lib.loader.IBridgeMediaLoader;
 import com.luck.picture.lib.loader.LocalMediaLoader;
 import com.luck.picture.lib.loader.LocalMediaPageLoader;
+import com.luck.picture.lib.immersive.BarCompat;
 import com.luck.picture.lib.magical.BuildRecycleItemViewParams;
 import com.luck.picture.lib.magical.MagicalView;
 import com.luck.picture.lib.magical.OnMagicalViewCallback;
@@ -1335,19 +1339,27 @@ public class PictureSelectorPreviewFragment extends PictureCommonFragment {
                 isAnimationStart = false;
                 if (SdkVersionUtils.isP() && isAdded()) {
                     Window window = requireActivity().getWindow();
-                    WindowManager.LayoutParams lp = window.getAttributes();
-                    if (isAnimInit) {
-                        lp.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
-                        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                            lp.layoutInDisplayCutoutMode =
-                                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                        // Android 15+：FLAG_FULLSCREEN 已弃用且无效，改用 InsetsController 控制系统栏
+                        WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(window, window.getDecorView());
+                        controller.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+                        if (isAnimInit) {
+                            controller.hide(WindowInsetsCompat.Type.systemBars());
+                        } else {
+                            controller.show(WindowInsetsCompat.Type.systemBars());
                         }
-                        window.setAttributes(lp);
-                        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
                     } else {
-                        lp.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                        window.setAttributes(lp);
-                        window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+                        WindowManager.LayoutParams lp = window.getAttributes();
+                        if (isAnimInit) {
+                            lp.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+                            BarCompat.setCutoutModeShortEdges(window);
+                            window.setAttributes(lp);
+                            window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+                        } else {
+                            lp.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                            window.setAttributes(lp);
+                            window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+                        }
                     }
                 }
             }

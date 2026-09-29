@@ -7,12 +7,13 @@ static def releaseTime() {
 }
 
 android {
-    compileSdk 34
+    namespace 'com.luck.pictureselector'
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.luck.pictureselector"
         minSdk 21
-        targetSdk 34
+        targetSdk 36
         versionCode cfgs.versionCode
         versionName cfgs.versionName
     }
@@ -59,11 +60,7 @@ android {
         }
     }
 
-    dexOptions {
-        javaMaxHeapSize "4g"
-    }
-
-    lintOptions {
+    lint {
         checkReleaseBuilds false
         abortOnError false
     }
@@ -71,6 +68,10 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 }
 

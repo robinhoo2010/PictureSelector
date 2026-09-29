@@ -11,11 +11,12 @@ apply plugin: 'com.android.library'
 }*/
 
 android {
-    compileSdkVersion 27
+    namespace 'top.zibin.luban'
+    compileSdk 36
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 27
+        targetSdkVersion 36
     }
     buildTypes {
         release {

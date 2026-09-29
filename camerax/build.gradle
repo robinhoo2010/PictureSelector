@@ -3,13 +3,18 @@ plugins {
 }
 
 android {
-    compileSdk 34
+    namespace 'com.luck.lib.camerax'
+    compileSdk 36
 
     defaultConfig {
         minSdkVersion 21
-        targetSdk 34
+        targetSdk 36
 
         consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 
     buildTypes {

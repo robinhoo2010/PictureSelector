@@ -40,6 +40,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.yalantis.ucrop.decoration.GridSpacingItemDecoration;
 import com.yalantis.ucrop.model.AspectRatio;
 import com.yalantis.ucrop.model.CustomIntentKey;
+import com.yalantis.ucrop.statusbar.BarCompat;
 import com.yalantis.ucrop.statusbar.ImmersiveManager;
 import com.yalantis.ucrop.util.DensityUtil;
 import com.yalantis.ucrop.util.FileUtils;
@@ -338,11 +339,12 @@ public class UCropMultipleActivity extends AppCompatActivity implements UCropFra
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setStatusBarColor(@ColorInt int color) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                && Build.VERSION.SDK_INT <= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             final Window window = getWindow();
             if (window != null) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(color);
+                BarCompat.setStatusBarColor(window, color);
             }
         }
     }
